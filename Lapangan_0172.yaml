@@ -1,0 +1,192 @@
+openapi: "3.0.2"
+info:
+  title: API Peminjaman Lapangan
+  description: API untuk mengelola data peminjaman lapangan seperti daftar peminjaman, detail peminjaman, dan manajemen data.
+  version: '1.0.0'
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Admin API Lapangan
+    email: admin@lapangan.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://api.lapangan.com/v1
+    description: Production servers
+  - url: http://api-staging.lapangan.com/v1
+    description: Staging servers
+
+tags:
+  - name: Peminjaman
+    description: Endpoint untuk pengelolaan data peminjaman lapangan
+
+paths:
+  /peminjaman:
+    get:
+      tags:
+        - Peminjaman
+      summary: Mengambil seluruh data peminjaman
+      operationId: getAllPeminjaman
+      responses:
+        '200':
+          description: Daftar peminjaman berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Peminjaman'
+    post:
+      tags:
+        - Peminjaman
+      summary: Menambah data peminjaman
+      operationId: createPeminjaman
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeminjamanInput'
+      responses:
+        '201':
+          description: Data peminjaman berhasil ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Peminjaman'
+        '400':
+          description: Data tidak valid
+
+  /peminjaman/{id}:
+    get:
+      tags:
+        - Peminjaman
+      summary: Mengambil data peminjaman berdasarkan ID
+      operationId: getPeminjamanById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID peminjaman
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Data peminjaman berhasil ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Peminjaman'
+        '404':
+          description: Data tidak ditemukan
+
+    put:
+      tags:
+        - Peminjaman
+      summary: Memperbarui data peminjaman berdasarkan ID
+      operationId: updatePeminjaman
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID peminjaman
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeminjamanInput'
+      responses:
+        '200':
+          description: Data peminjaman berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Peminjaman'
+        '400':
+          description: Permintaan tidak valid
+        '404':
+          description: Data tidak ditemukan
+
+    delete:
+      tags:
+        - Peminjaman
+      summary: Menghapus data peminjaman berdasarkan ID
+      operationId: deletePeminjaman
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID peminjaman
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Data berhasil dihapus
+        '404':
+          description: Data tidak ditemukan
+
+components:
+  schemas:
+    Peminjaman:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID unik peminjaman
+        nama_peminjam:
+          type: string
+          description: Nama peminjam
+        lapangan:
+          type: string
+          description: Nama atau ID lapangan
+        tanggal:
+          type: string
+          format: date
+          description: Tanggal peminjaman
+        waktu_mulai:
+          type: string
+          format: time
+          description: Waktu mulai peminjaman
+        waktu_selesai:
+          type: string
+          format: time
+          description: Waktu selesai peminjaman
+      required:
+        - id
+        - nama_peminjam
+        - lapangan
+        - tanggal
+        - waktu_mulai
+        - waktu_selesai
+
+    PeminjamanInput:
+      type: object
+      properties:
+        nama_peminjam:
+          type: string
+          description: Nama peminjam
+        lapangan:
+          type: string
+          description: Nama atau ID lapangan
+        tanggal:
+          type: string
+          format: date
+          description: Tanggal peminjaman
+        waktu_mulai:
+          type: string
+          format: time
+          description: Waktu mulai peminjaman
+        waktu_selesai:
+          type: string
+          format: time
+          description: Waktu selesai peminjaman
+      required:
+        - nama_peminjam
+        - lapangan
+        - tanggal
+        - waktu_mulai
+        - waktu_selesai
